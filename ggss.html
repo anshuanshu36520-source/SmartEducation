@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0f766e">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+  <title>Smart Education 2.0 - Offline Classroom</title>
+</head>
+<body>
+  <header class="app-header">
+    <h1>Smart Education 2.0</h1>
+    <nav class="tabs">
+      <button data-tab="home" class="tab active">Home</button>
+      <button data-tab="hub" class="tab">Learning Hub</button>
+      <button data-tab="community" class="tab">Community</button>
+      <button data-tab="dashboard" class="tab">Dashboard</button>
+      <button data-tab="support" class="tab">Support</button>
+      <button id="installBtn" class="install-btn" hidden>Install</button>
+    </nav>
+  </header>
+
+  <main>
+    <section id="home" class="tab-panel active">
+      <div class="grid">
+        <div class="card hero">
+       
+              <h2>Smart Education 2.0</h2>
+              <p class="muted">Offline-first remote classroom for rural colleges — multilingual, voice-enabled, and AI-assisted.</p>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Quick Actions</h3>
+          <div class="row">
+            <button onclick="document.querySelector('[data-tab=hub]').click()">Open Learning Hub</button>
+            <button onclick="document.querySelector('[data-tab=community]').click()">Open Community</button>
+            <button onclick="document.querySelector('[data-tab=dashboard]').click()">Open Dashboard</button>
+            <button onclick="document.querySelector('[data-tab=support]').click()">Open Support</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="hub" class="tab-panel">
+      <div class="toolbar">
+        <select id="languageSelect"></select>
+        <button id="startRecBtn">🎙️ STT</button>
+        <button id="stopRecBtn" disabled>⏹️</button>
+        <button id="ttsBtn">🔊 TTS</button>
+        <input id="searchInput" placeholder="Search cached lessons..." />
+      </div>
+      <div class="grid">
+        <div class="card">
+          <h3>Create Note</h3>
+          <textarea id="noteInput" rows="4" placeholder="Type or dictate a lesson note..."></textarea>
+          <div class="row">
+            <button id="saveNoteBtn">Save Lesson</button>
+            <button id="summarizeBtn">Summarize</button>
+            <button id="quizBtn">Make Quiz</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Cached Lessons</h3>
+          <ul id="lessonsList" class="list"></ul>
+        </div>
+        <div class="card">
+          <h3>Summary</h3>
+          <div id="summaryBox" class="box"></div>
+        </div>
+        <div class="card">
+          <h3>Quiz</h3>
+          <div id="quizBox" class="box"></div>
+        </div>
+        <div class="card">
+          <h3>Teacher Upload</h3>
+          <input id="lessonTitle" placeholder="Title" />
+          <textarea id="lessonContent" rows="8" placeholder="Paste text/notes here..."></textarea>
+          <input id="fileInput" type="file" accept=".txt,.md,.json" />
+          <button id="uploadBtn">Save Offline</button>
+        </div>
+        <div class="card">
+          <h3>Manage Content</h3>
+          <ul id="manageList" class="list"></ul>
+        </div>
+        <div class="card">
+          <h3>Live Class</h3>
+          <div class="row">
+            <input id="roomName" placeholder="Room name (offline signaling)" />
+            <button id="liveHost">Host</button>
+            <button id="liveJoin">Join</button>
+          </div>
+          <textarea id="liveSignalOut" rows="3" placeholder="Copy this signal..." readonly></textarea>
+          <textarea id="liveSignalIn" rows="3" placeholder="Paste signal from peer..."></textarea>
+          <div class="row">
+            <button id="liveCopy">Copy</button>
+            <button id="liveConnect">Connect</button>
+          </div>
+          <div id="liveStatus" class="muted">Not connected</div>
+          <div id="liveChat" class="chat" style="margin-top:8px"></div>
+          <div class="row" style="margin-top:6px">
+            <input id="liveMsg" placeholder="Type message..." />
+            <button id="liveSend">Send</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Resource Library</h3>
+          <input id="resTitle" placeholder="Title" />
+          <textarea id="resDesc" rows="4" placeholder="Description"></textarea>
+          <input id="resFile" type="file" accept=".pdf,.txt,.md,.json" />
+          <div class="row"><button id="resAdd">Add</button><input id="resSearch" placeholder="Search resources..." /></div>
+          <ul id="resList" class="list"></ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="community" class="tab-panel">
+      <div class="grid">
+        <div class="card">
+          <h3>Device-to-Device Share</h3>
+          <div class="row">
+            <button id="hostBtn">Host Share</button>
+            <button id="joinBtn">Join Share</button>
+          </div>
+          <textarea id="signalOut" rows="3" placeholder="Copy to share..." readonly></textarea>
+          <textarea id="signalIn" rows="3" placeholder="Paste from other device..."></textarea>
+          <div class="row">
+            <button id="copyOfferBtn">Copy</button>
+            <button id="connectBtn">Connect</button>
+          </div>
+          <div id="p2pStatus" class="muted">Not connected</div>
+        </div>
+        <div class="card">
+          <h3>Discussion Forum</h3>
+          <input id="threadTitle" placeholder="Thread title" />
+          <textarea id="threadBody" rows="4" placeholder="Ask a question or share..." ></textarea>
+          <button id="threadPost">Post</button>
+          <ul id="threadList" class="list" style="margin-top:8px"></ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="dashboard" class="tab-panel">
+      <div class="grid">
+        <div class="card">
+          <h3>Student Dashboard</h3>
+          <div id="studentOverview" class="box"></div>
+          <div id="adaptiveNext" class="box"></div>
+        </div>
+        <div class="card">
+          <h3>Teacher Dashboard</h3>
+          <div id="teacherOverview" class="box"></div>
+        </div>
+        <div class="card">
+          <h3>Your Progress</h3>
+          <div class="row">
+            <div>XP: <span id="xpCount">0</span></div>
+            <div>Badges: <span id="badgesList">-</span></div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Admin Tools</h3>
+          <div class="row">
+            <input id="userName" placeholder="Name" />
+            <select id="userRole"><option>student</option><option>teacher</option><option>admin</option></select>
+            <button id="userAdd">Add</button>
+          </div>
+          <ul id="userList" class="list"></ul>
+          <h4 style="margin-top:8px">Bulk Notify</h4>
+          <textarea id="notifyText" rows="3" placeholder="Announcement text..."></textarea>
+          <button id="notifySend">Send</button>
+        </div>
+        <div class="card">
+          <h3>Notifications</h3>
+          <button id="notifPerm">Enable System Notifications</button>
+          <ul id="notifList" class="list"></ul>
+        </div>
+        <div class="card">
+          <h3>Certificates</h3>
+          <input id="certName" placeholder="Student name" />
+          <input id="certCourse" placeholder="Course name" />
+          <button id="certGen">Generate</button>
+          <canvas id="certCanvas" width="800" height="560" class="box" style="margin-top:8px"></canvas>
+          <div class="row"><button id="certDownload">Download PNG</button></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="support" class="tab-panel">
+      <div class="grid">
+        <div class="card">
+          <h3>Local Chatbot</h3>
+          <div id="chatBox" class="chat"></div>
+          <div class="row">
+            <input id="chatInput" placeholder="Ask about cached lessons..." />
+            <button id="chatSendBtn">Send</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Export / Import</h3>
+          <div class="row">
+            <button id="exportBtn">Export .json</button>
+            <input id="importFile" type="file" accept="application/json" />
+          </div>
+        </div>
+      </div>
+    </section>
+    <section id="home-section" class="tab-panel active">
+  <div class="grid">
+
+    <!-- Hero / Introduction -->
+    <div class="card hero" id="hero-card">
+      <h2>Welcome to Smart Education 2.0</h2>
+      <p class="muted">Offline-first remote classroom for rural colleges — multilingual, voice-enabled, and AI-assisted.</p>
+      <p>Empowering students and teachers with interactive lessons, quizzes, and live collaborative tools for enhanced learning outcomes.</p>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="card" id="quick-actions-card">
+      <h3>Quick Actions</h3>
+      <div class="row" id="quick-actions-buttons">
+        <button onclick="document.querySelector('[data-tab=hub]').click()">Learning Hub</button>
+        <button onclick="document.querySelector('[data-tab=community]').click()">Community</button>
+        <button onclick="document.querySelector('[data-tab=dashboard]').click()">Dashboard</button>
+        <button onclick="document.querySelector('[data-tab=support]').click()">Support</button>
+      </div>
+    </div>
+
+    <!-- Featured Insights -->
+    <div class="card" id="featured-insights-card">
+      <h3>Featured Insights</h3>
+      <div id="ai-lessons">
+        <h4>AI-Driven Lessons</h4>
+        <p>Adaptive AI ensures each student receives personalized guidance and feedback.</p>
+      </div>
+      <div id="multilingual-support">
+        <h4>Multilingual Support</h4>
+        <p>Lessons and resources are available in multiple languages, enabling inclusive education and hands-free learning.</p>
+      </div>
+    </div>
+
+    <!-- Recent Updates -->
+    <div class="card" id="recent-updates-card">
+      <h3>Recent Updates</h3>
+      <ul id="updates-list">
+        <li>New offline lessons added for Science & Technology.</li>
+        <li>Teacher dashboard updated with performance analytics.</li>
+        <li>Community forum now supports discussion threads and collaborative learning.</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+  </main>
+
+  <footer class="muted">Works offline • Multilingual • On-device AI</footer>
+
+  <script src="src/db.js"></script>
+  <script src="src/i18n.js"></script>
+  <script src="src/voice.js"></script>
+  <script src="src/summarizer.js"></script>
+  <script src="src/chatbot.js"></script>
+  <script src="src/gamification.js"></script>
+  <script src="src/p2p.js"></script>
+  <script src="src/translate.js"></script>
+  <script src="src/adaptive.js"></script>
+  <script src="src/dashboards.js"></script>
+  <script src="src/live.js"></script>
+  <script src="src/library.js"></script>
+  <script src="src/forum.js"></script>
+  <script src="src/admin.js"></script>
+  <script src="src/notifications.js"></script>
+  <script src="src/certificates.js"></script>
+  <script src="src/voice-nav.js"></script>
+  <script src="src/app.js"></script>
+</body>
+</html>
+
