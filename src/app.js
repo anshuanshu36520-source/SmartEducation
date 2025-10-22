@@ -32,6 +32,7 @@ if ('serviceWorker' in navigator) {
 // App init
 (async function init() {
   await dbInit();
+  try { loadDiseaseOptions(); } catch {}
   await loadLanguageOptions();
   await refreshLessons();
   await refreshManageList();
@@ -44,7 +45,7 @@ document.getElementById('saveNoteBtn').addEventListener('click', async () => {
   const content = document.getElementById('noteInput').value.trim();
   if (!content) return;
   const title = content.split('\n')[0].slice(0, 40) || 'Untitled';
-  await dbSaveLesson({ title, content, language: getSelectedLanguage(), createdAt: Date.now() });
+  await dbSaveLesson({ title, content, language: getSelectedLanguage(), createdAt: Date.now(), disease: getEffectiveSaveDisease() });
   await awardXp(5);
   document.getElementById('noteInput').value = '';
   await refreshLessons();
@@ -59,7 +60,7 @@ document.getElementById('searchInput').addEventListener('input', async (e) => {
 async function refreshLessons(query = '') {
   const list = document.getElementById('lessonsList');
   list.innerHTML = '';
-  const lessons = await dbGetLessons(query);
+  const lessons = await dbGetLessons(query, getCurrentDisease());
   lessons.forEach((l) => {
     const li = document.createElement('li');
     const left = document.createElement('div');
@@ -84,7 +85,7 @@ document.getElementById('uploadBtn').addEventListener('click', async () => {
   const title = document.getElementById('lessonTitle').value.trim();
   const content = document.getElementById('lessonContent').value.trim();
   if (!title || !content) return;
-  await dbSaveLesson({ title, content, language: getSelectedLanguage(), createdAt: Date.now() });
+  await dbSaveLesson({ title, content, language: getSelectedLanguage(), createdAt: Date.now(), disease: getEffectiveSaveDisease() });
   document.getElementById('lessonTitle').value = '';
   document.getElementById('lessonContent').value = '';
   await awardXp(10);
@@ -98,7 +99,7 @@ document.getElementById('fileInput').addEventListener('change', async (e) => {
   if (!file) return;
   const text = await file.text();
   const title = file.name.replace(/\.[^/.]+$/, '');
-  await dbSaveLesson({ title, content: text, language: getSelectedLanguage(), createdAt: Date.now() });
+  await dbSaveLesson({ title, content: text, language: getSelectedLanguage(), createdAt: Date.now(), disease: getEffectiveSaveDisease() });
   await awardXp(8);
   await refreshLessons();
   await refreshManageList();
@@ -155,7 +156,7 @@ document.getElementById('chatSendBtn').addEventListener('click', async () => {
   if (!query) return;
   input.value = '';
   appendChat('you', query);
-  const lessons = await dbGetLessons();
+  const lessons = await dbGetLessons('', getCurrentDisease());
   const answer = await chatbotAnswer(query, lessons);
   appendChat('bot', answer);
   await awardXp(1); await updateProfile();

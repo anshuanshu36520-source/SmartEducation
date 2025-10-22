@@ -2,7 +2,7 @@ document.getElementById('threadPost').addEventListener('click', async ()=>{
   const title=document.getElementById('threadTitle').value.trim();
   const body=document.getElementById('threadBody').value.trim();
   if(!title||!body) return;
-  await dbAddThread({ title, body, createdAt: Date.now() });
+  await dbAddThread({ title, body, createdAt: Date.now(), disease: getEffectiveSaveDisease() });
   document.getElementById('threadTitle').value='';
   document.getElementById('threadBody').value='';
   renderThreads();
@@ -10,7 +10,7 @@ document.getElementById('threadPost').addEventListener('click', async ()=>{
 
 async function renderThreads(){
   const list=document.getElementById('threadList'); list.innerHTML='';
-  const threads=await dbGetThreads();
+  const threads=await dbGetThreads(getCurrentDisease());
   threads.forEach(t=>{
     const li=document.createElement('li');
     li.textContent=t.title;

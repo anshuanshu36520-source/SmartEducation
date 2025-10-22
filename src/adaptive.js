@@ -1,6 +1,6 @@
 async function getAdaptiveNextSteps() {
   const profile = await dbGetProfile();
-  const lessons = await dbGetLessons();
+  const lessons = await dbGetLessons('', getCurrentDisease());
   const hasFewLessons = lessons.length < 5;
   const recommendations = [];
   if (hasFewLessons) recommendations.push('Add 3 lessons to build your library');
