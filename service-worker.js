@@ -7,6 +7,7 @@ const CORE_ASSETS = [
   '/banners/hero.svg',
   '/src/app.js',
   '/src/db.js',
+  '/src/disease.js',
   '/src/i18n.js',
   '/src/voice.js',
   '/src/summarizer.js',

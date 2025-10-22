@@ -63,16 +63,17 @@ function dbDeleteLesson(id) {
   });
 }
 
-function dbGetLessons(query = '') {
+function dbGetLessons(query = '', disease) {
   return new Promise((resolve, reject) => {
     const tx = db.transaction('lessons');
     const store = tx.objectStore('lessons');
     const req = store.getAll();
     req.onsuccess = () => {
       const items = (req.result || []).sort((a, b) => (b.createdAt||0) - (a.createdAt||0));
-      if (!query) return resolve(items);
+      const diseaseFiltered = (disease && disease !== 'all') ? items.filter((x)=> (x.disease||'general') === disease) : items;
+      if (!query) return resolve(diseaseFiltered);
       const q = query.toLowerCase();
-      resolve(items.filter((x) => x.title.toLowerCase().includes(q) || x.content.toLowerCase().includes(q)));
+      resolve(diseaseFiltered.filter((x) => x.title.toLowerCase().includes(q) || x.content.toLowerCase().includes(q)));
     };
     req.onerror = () => reject(req.error);
   });
@@ -157,12 +158,12 @@ async function mongoApplyFromMirror(){
 // Resources API
 function dbAddResource(item){ return new Promise((res,rej)=>{ const tx=db.transaction('resources','readwrite'); tx.objectStore('resources').add(item).onsuccess=()=>res(); tx.onerror=()=>rej(tx.error); }); }
 function dbDeleteResource(id){ return new Promise((res,rej)=>{ const tx=db.transaction('resources','readwrite'); tx.objectStore('resources').delete(id).onsuccess=()=>res(); tx.onerror=()=>rej(tx.error); }); }
-function dbGetResources(){ return new Promise((res,rej)=>{ const tx=db.transaction('resources'); const r=tx.objectStore('resources').getAll(); r.onsuccess=()=>res(r.result||[]); r.onerror=()=>rej(r.error); }); }
+function dbGetResources(disease){ return new Promise((res,rej)=>{ const tx=db.transaction('resources'); const r=tx.objectStore('resources').getAll(); r.onsuccess=()=>{ const items=r.result||[]; res((disease&&disease!=='all')?items.filter(x=>(x.disease||'general')===disease):items); }; r.onerror=()=>rej(r.error); }); }
 
 // Forum API
 function dbAddThread(item){ return new Promise((res,rej)=>{ const tx=db.transaction('forum','readwrite'); tx.objectStore('forum').add(item).onsuccess=()=>res(); tx.onerror=()=>rej(tx.error); }); }
 function dbDeleteThread(id){ return new Promise((res,rej)=>{ const tx=db.transaction('forum','readwrite'); tx.objectStore('forum').delete(id).onsuccess=()=>res(); tx.onerror=()=>rej(tx.error); }); }
-function dbGetThreads(){ return new Promise((res,rej)=>{ const tx=db.transaction('forum'); const r=tx.objectStore('forum').getAll(); r.onsuccess=()=>res(r.result||[]); r.onerror=()=>rej(r.error); }); }
+function dbGetThreads(disease){ return new Promise((res,rej)=>{ const tx=db.transaction('forum'); const r=tx.objectStore('forum').getAll(); r.onsuccess=()=>{ const items=r.result||[]; res((disease&&disease!=='all')?items.filter(x=>(x.disease||'general')===disease):items); }; r.onerror=()=>rej(r.error); }); }
 
 // Users API
 function dbAddUser(item){ return new Promise((res,rej)=>{ const tx=db.transaction('users','readwrite'); tx.objectStore('users').add(item).onsuccess=()=>res(); tx.onerror=()=>rej(tx.error); }); }
